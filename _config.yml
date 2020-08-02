@@ -105,3 +105,5 @@ theme: next
 deploy:
   type: git
   repo: git@github.com:zhang-stone/zhang-stone.github.io.git
+  #master分支
+  branch: master
