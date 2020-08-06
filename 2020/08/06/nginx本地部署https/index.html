@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1 安装OpenSSL先到http:&#x2F;&#x2F;slproweb.com&#x2F;products&#x2F;Win32OpenSSL.html 去下载OpenSSL（根据系统选择32位或者64位版本下载安装）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx本地部署https">
+<meta property="og:url" content="http://yoursite.com/2020/08/06/nginx%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2https/index.html">
+<meta property="og:site_name" content="stonezhang">
+<meta property="og:description" content="1 安装OpenSSL先到http:&#x2F;&#x2F;slproweb.com&#x2F;products&#x2F;Win32OpenSSL.html 去下载OpenSSL（根据系统选择32位或者64位版本下载安装）。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-06T15:06:55.000Z">
+<meta property="article:modified_time" content="2020-08-06T16:46:19.909Z">
+<meta property="article:author" content="stonezhang">
+<meta property="article:tag" content="https">
+<meta property="article:tag" content="nginx">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/08/06/nginx%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2https/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>nginx本地部署https | stonezhang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">stonezhang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">越努力，越幸运</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/06/nginx%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2https/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="stonezhang">
+      <meta itemprop="description" content="弱小和无知都不是生存的障碍，傲慢才是">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="stonezhang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nginx本地部署https
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-06 23:06:55" itemprop="dateCreated datePublished" datetime="2020-08-06T23:06:55+08:00">2020-08-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-07 00:46:19" itemprop="dateModified" datetime="2020-08-07T00:46:19+08:00">2020-08-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index"><span itemprop="name">nginx</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1-安装OpenSSL"><a href="#1-安装OpenSSL" class="headerlink" title="1 安装OpenSSL"></a>1 安装OpenSSL</h2><p>先到<a target="_blank" rel="noopener" href="http://slproweb.com/products/Win32OpenSSL.html">http://slproweb.com/products/Win32OpenSSL.html</a> 去下载OpenSSL（根据系统选择32位或者64位版本下载安装）。</p>
+<a id="more"></a>
+<p>然后安装在C:\OpenSSL-Win64下。</p>
+<p>然后配置环境变量。在系统环境变量中添加环境变量：</p>
+<p>变量名：OPENSSL_HOME</p>
+<p>变量值：C:\OpenSSL-Win64\bin;</p>
+<p>（变量值为OPENSSL安装位置下的bin目录）</p>
+<p>并在Path变量结尾添加一条： %OPENSSL_HOME%</p>
+<h2 id="2-安装Nginx"><a href="#2-安装Nginx" class="headerlink" title="2 安装Nginx"></a>2 安装Nginx</h2><p>到Nginx官网下载Nginx，我这里下载的是 nginx/Windows-1.12.0 这个版本。<br>把下载好的压缩包解压出来，拷贝其中的nginx-1.12.0目录到c:\下。并将文件夹名字修改为nginx。这样，Nginx就被安装到了c:\nginx目录下。<br>进入到C:\nginx目录下，双击nginx.exe文件即可启动服务器。在浏览器地址栏输入<a target="_blank" rel="noopener" href="http://localhost,如果可以成功访问到nginx的欢迎界面,则说明安装成功./">http://localhost，如果可以成功访问到Nginx的欢迎界面，则说明安装成功。</a></p>
+<blockquote>
+<p>注意事项， 如果安装路径包含空格，如C:\Program Files (x86)\nginx, 在配置文件种需要</p>
+</blockquote>
+<h2 id="3-生成ssl证书"><a href="#3-生成ssl证书" class="headerlink" title="3 生成ssl证书"></a>3 生成ssl证书</h2><ol>
+<li>首先在Nginx安装目录中创建ssl文件夹用于存放证书。比如我的文件目录为 C:\nginx\ssl<br>在控制台中执行：<br>cd C:\nginx\ssl</li>
+<li>创建密钥<br>(window在cmd种执行)<br>使用openssl工具生成一个RSA私钥</li>
+</ol>
+<p>openssl genrsa -des3 -out server.key 2048</p>
+<p>注意：生成私钥，需要提供一个至少4位，最多1023位的密码。</p>
+<ol start="3">
+<li>生成CSR（证书签名请求）</li>
+</ol>
+<p>openssl req -new -key server.key -out server.csr</p>
+<p>说明：需要依次输入国家，地区，城市，组织，组织单位，Common Name和Email。其中Common Name，可以写自己的名字或者域名，如果要支持https，Common Name应该与域名保持一致，否则会引起浏览器警告。</p>
+<p>可以将证书发送给证书颁发机构（CA），CA验证过请求者的身份之后，会出具签名证书，需要花钱。另外，如果只是内部或者测试需求，也可以使用OpenSSL实现自签名。</p>
+<ol start="4">
+<li>删除密钥中的密码</li>
+</ol>
+<p>openssl rsa -in server.key -out server.key</p>
+<p>说明：如果不删除密码，在应用加载的时候会出现输入密码进行验证的情况，不方便自动化部署。</p>
+<p>4、生成自签名证书</p>
+<p>内部或者测试使用，只要忽略证书提醒就可以了。</p>
+<p>openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt</p>
+<h2 id="4-修改Nginx的nginx-conf配置文件"><a href="#4-修改Nginx的nginx-conf配置文件" class="headerlink" title="4 修改Nginx的nginx.conf配置文件"></a>4 修改Nginx的nginx.conf配置文件</h2><p>我的这个文件在C:\nginx\conf目录下。用任意一个编辑器（如Sublime Text之类）打开这个nginx.conf文件。</p>
+<p>找到HTTPS server配置的那一段（即包含有listen 443 ssl配置那一段）。我们发现这段代码被注释掉了。所以，首先我们把该段代码前面的#server.server.key这两个文件的目录。并配置server_name为Common Name(生产证书填的)。修改后的该段配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       443 ssl;</span><br><span class="line">    server_name  localhost;</span><br><span class="line"></span><br><span class="line">    ssl_certificate      C:&#x2F;&#x2F;nginx&#x2F;&#x2F;ssl&#x2F;&#x2F;server.crt;  # 这个是证书的crt文件所在目录</span><br><span class="line">    ssl_certificate_key  C:&#x2F;&#x2F;nginx&#x2F;&#x2F;ssl&#x2F;&#x2F;server.key;  # 这个是证书key文件所在目录</span><br><span class="line">    # (window)所在路径有空格, 需要在&quot;&quot;, 例如 &quot;C:&#x2F;&#x2F;nginx&#x2F;&#x2F;ssl&#x2F;&#x2F;server.key&quot;</span><br><span class="line"></span><br><span class="line">    ssl_session_cache    shared:SSL:1m;</span><br><span class="line">    ssl_session_timeout  5m;</span><br><span class="line"></span><br><span class="line">    ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">    ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">    location &#x2F; &#123;</span><br><span class="line">      root   html;                  # 这个是指定一个项目所在目录</span><br><span class="line">      index  index.html index.htm;  # 这个是指定首页的文件名</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意一下那两个证书的文件路径的写法。</p>
+<h2 id="5-Nginx的常用操作"><a href="#5-Nginx的常用操作" class="headerlink" title="5 Nginx的常用操作"></a>5 Nginx的常用操作</h2><p>在继续后面的内容之前，先简单介绍下Windows命令行中操作Nginx的几个常用的语句：</p>
+<p>start nginx               # 启动Nginx<br>nginx.exe -s stop         # 快速停止Nginx，可能并不保存相关信息<br>nginx.exe -s quit         # 完整有序的停止Nginx，并保存相关信息<br>nginx.exe -s reload       # 重新载入Nginx，当配置信息修改，需要重新载入这些配置时使用此命令。<br>nginx.exe -s reopen       # 重新打开日志文件<br>nginx -v                  # 查看Nginx版本<br>因为修改了配置文件，所以需要退出控制台，并重新打开一个控制台。执行如下命令：<br>cd c:\nginx<br>nginx.exe -s quit<br>start nginx<br>即退出Nginx，然后再重新启动它。这时候，在浏览器地址栏输入(<a target="_blank" rel="noopener" href="https://localhost)并回车./">https://localhost)并回车。</a></p>
+<p>这时候，你可能看到“您的连接不是私密连接”的提示，单击页面中的“高级”，并接着单击“继续前往m.test.com（不安全）”，就可以看到Nginx的欢迎界面了。说明https服务器已经配置成功了。<br>(<a target="_blank" rel="noopener" href="https://localhost.com/">https://localhost.com</a>)<br>如果你只想用访问这个https服务器，那么下面的内容你就不用接着往下看了。但是，也许你可能还想要用一个别的域名,<br>例如(https//m.test.com)来访问这个服务器。那么怎么做呢？这就需要继续往下看了。<br>##6 修改hosts配置，实现域名映射<br>127.0.0.1  m.test.com<br>这样，你就可以通过(<a target="_blank" rel="noopener" href="https://m.test.com)来访问配置好的https服务器了/">https://m.test.com)来访问配置好的https服务器了</a></p>
+<h4 id="tips"><a href="#tips" class="headerlink" title="tips"></a>tips</h4><ol>
+<li>尽量用管理员打开powershell去操作, 避免出现权限问题. </li>
+<li>用命令行去操作, 不要多次启动, 每次启动就多开一个进程<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; window完整的看到所有的nginx进程的详细信息: </span><br><span class="line"> tasklist &#x2F;fi &quot;imagename eq nginx.exe&quot; </span><br><span class="line">&#x2F;&#x2F; 全部结束这些进程</span><br><span class="line"> taskkill &#x2F;fi &quot;imagename eq nginx.exe&quot; &#x2F;f</span><br></pre></td></tr></table></figure></li>
+<li>有报错,可以出logs/error.log查看nginx日志</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/https/" rel="tag"># https</a>
+              <a href="/tags/nginx/" rel="tag"># nginx</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/04/%E6%8D%A2%E4%BA%86%E7%94%B5%E8%84%91-%E9%87%8D%E6%96%B0%E9%83%A8%E7%BD%B2hexo/" rel="prev" title="换了电脑,重新部署hexo">
+      <i class="fa fa-chevron-left"></i> 换了电脑,重新部署hexo
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85OpenSSL"><span class="nav-number">1.</span> <span class="nav-text">1 安装OpenSSL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%AE%89%E8%A3%85Nginx"><span class="nav-number">2.</span> <span class="nav-text">2 安装Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%94%9F%E6%88%90ssl%E8%AF%81%E4%B9%A6"><span class="nav-number">3.</span> <span class="nav-text">3 生成ssl证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E4%BF%AE%E6%94%B9Nginx%E7%9A%84nginx-conf%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">4 修改Nginx的nginx.conf配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Nginx%E7%9A%84%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="nav-number">5.</span> <span class="nav-text">5 Nginx的常用操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#tips"><span class="nav-number">5.0.1.</span> <span class="nav-text">tips</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="stonezhang"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">stonezhang</p>
+  <div class="site-description" itemprop="description">弱小和无知都不是生存的障碍，傲慢才是</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhang-stone" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhang-stone" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhangzhhe@gmail.com" title="E-Mail → mailto:zhangzhhe@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">stonezhang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
