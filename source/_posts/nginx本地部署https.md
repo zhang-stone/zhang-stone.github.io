@@ -91,7 +91,7 @@ server {
 ## 5 Nginx的常用操作
 在继续后面的内容之前，先简单介绍下Windows命令行中操作Nginx的几个常用的语句：
 
-start nginx               # 启动Nginx
+nginx.exe                 # 启动Nginx
 nginx.exe -s stop         # 快速停止Nginx，可能并不保存相关信息
 nginx.exe -s quit         # 完整有序的停止Nginx，并保存相关信息
 nginx.exe -s reload       # 重新载入Nginx，当配置信息修改，需要重新载入这些配置时使用此命令。
@@ -120,3 +120,6 @@ start nginx
  taskkill /fi "imagename eq nginx.exe" /f
 ```
 4. 有报错,可以出logs/error.log查看nginx日志
+
+- 在当前位置打开powershel
+![avatar](https://res.cloudinary.com/dz79ynji8/image/upload/v1596909363/PowerShell_fgz3zj.jpg)
