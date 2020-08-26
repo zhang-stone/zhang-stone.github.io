@@ -10,7 +10,8 @@ categories:
 ---
 
 ### 需要做一个标题吸顶的效果
-在多个子组件中获取父组件DOM, 监听scroll事件
+在多个子组件中获取同一个父组件DOM, 监听scroll事件
+<!-- more -->
 ```
 <!-- child.vue循环多个 -->
 mounted() {
@@ -67,3 +68,6 @@ window.onload = function(){
 运行结果：我是box1 我是box2
 ```
 addEventListener可以多次绑定同一个事件并且不会覆盖上一个事件。
+
+参考链接
+- https://www.cnblogs.com/ontheway1215/p/6842274.html
