@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="项目: Vue.js + Ant Design of Vue需求上传图片, 前端预览, 以二进制流文件发送给后端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端图片预览, formData对象发给后端">
+<meta property="og:url" content="http://yoursite.com/2020/08/30/%E5%89%8D%E7%AB%AF%E5%9B%BE%E7%89%87%E9%A2%84%E8%A7%88-formData%E5%AF%B9%E8%B1%A1%E5%8F%91%E7%BB%99%E5%90%8E%E7%AB%AF/index.html">
+<meta property="og:site_name" content="stonezhang">
+<meta property="og:description" content="项目: Vue.js + Ant Design of Vue需求上传图片, 前端预览, 以二进制流文件发送给后端">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-30T03:11:13.000Z">
+<meta property="article:modified_time" content="2020-08-30T04:47:54.079Z">
+<meta property="article:author" content="stonezhang">
+<meta property="article:tag" content="图片预览">
+<meta property="article:tag" content="base64">
+<meta property="article:tag" content="formData">
+<meta property="article:tag" content="二进制流(binary)">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/08/30/%E5%89%8D%E7%AB%AF%E5%9B%BE%E7%89%87%E9%A2%84%E8%A7%88-formData%E5%AF%B9%E8%B1%A1%E5%8F%91%E7%BB%99%E5%90%8E%E7%AB%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>前端图片预览, formData对象发给后端 | stonezhang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">stonezhang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">越努力，越幸运</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/30/%E5%89%8D%E7%AB%AF%E5%9B%BE%E7%89%87%E9%A2%84%E8%A7%88-formData%E5%AF%B9%E8%B1%A1%E5%8F%91%E7%BB%99%E5%90%8E%E7%AB%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="stonezhang">
+      <meta itemprop="description" content="弱小和无知都不是生存的障碍，傲慢才是">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="stonezhang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          前端图片预览, formData对象发给后端
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-08-30 11:11:13 / 修改时间：12:47:54" itemprop="dateCreated datePublished" datetime="2020-08-30T11:11:13+08:00">2020-08-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/formData/" itemprop="url" rel="index"><span itemprop="name">formData</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/formData/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="项目-Vue-js-Ant-Design-of-Vue"><a href="#项目-Vue-js-Ant-Design-of-Vue" class="headerlink" title="项目: Vue.js + Ant Design of Vue"></a>项目: Vue.js + Ant Design of Vue</h2><h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>上传图片, 前端预览, 以二进制流文件发送给后端</p>
+<a id="more"></a>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><ol>
+<li>图片对象写入formData对象</li>
+<li>图片对象转化成base64格式, 前端预览</li>
+<li>axios发所formData对象给后端<h4 id="上代码"><a href="#上代码" class="headerlink" title="上代码"></a>上代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 部分代码省略 update.vue</span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;a-upload-dragger</span><br><span class="line">    name&#x3D;&quot;file&quot;</span><br><span class="line">    @change&#x3D;&quot;handleChange&quot;</span><br><span class="line">    :beforeUpload&#x3D;&quot;beforeUpload&quot;</span><br><span class="line">    accept&#x3D;&quot;.jpg&quot;&gt;</span><br><span class="line">    &lt;img :scr&#x3D;&quot;previewImage&quot; alt&#x3D;&quot;就是一个input, type&#x3D;&quot;file&quot; 的组件&gt;</span><br><span class="line">  &lt;&#x2F;a-upload-dragger&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">  &#x2F;&#x2F; 文件对象转化成Base64格式</span><br><span class="line">  function getBase64(file) &#123;</span><br><span class="line">    return new Promise((resolve, reject) &#x3D;&gt; &#123;</span><br><span class="line">      const reader &#x3D; new FileReader()</span><br><span class="line">      reader.readAsDataURL(file)</span><br><span class="line">      reader.onload &#x3D; () &#x3D;&gt; resolve(reader.result)</span><br><span class="line">      reader.onerror &#x3D; error &#x3D;&gt; reject(error)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  created() &#123;</span><br><span class="line">    this.formData &#x3D; new FormData()</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    handleChange(info) &#123;</span><br><span class="line">      this.formData.set(&#39;file&#39;, info.file)</span><br><span class="line">      this.formData.set(&#39;index&#39;, 0)</span><br><span class="line">    &#125;,</span><br><span class="line">    beforeUpload(file) &#123;</span><br><span class="line">      file.preview &#x3D; await getBase64(file)</span><br><span class="line">      this.previewImage &#x3D; file.preview</span><br><span class="line">      return false</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x2F;&#x2F; 发给后端</span><br><span class="line">    generateDesign() &#123;</span><br><span class="line">      this.loading &#x3D; true</span><br><span class="line">      axios</span><br><span class="line">        .post(&#39;&#x2F;api&#x2F;....&#39;, this.formData)</span><br><span class="line">        .then(res &#x3D;&gt; &#123;</span><br><span class="line">          if (res.data.meta.status_code &#x3D;&#x3D;&#x3D; 200) &#123;</span><br><span class="line">            const data &#x3D; res.data.data || []</span><br><span class="line">          &#125; else &#123;</span><br><span class="line">            console.error(res.data.meta.message)</span><br><span class="line">            this.$message.error(res.data.meta.message)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .catch(error &#x3D;&gt; &#123;</span><br><span class="line">          console.error(error.message)</span><br><span class="line">        &#125;)</span><br><span class="line">        .finally(() &#x3D;&gt; &#123;</span><br><span class="line">          this.loading &#x3D; false</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>业务有变更, 要求在下个页面, 发送同样的请求</p>
+<h4 id="思路-1"><a href="#思路-1" class="headerlink" title="思路"></a>思路</h4><p>我需要保存图片到localStorage, 下个页面取出, 发给后端, 发现直接取到的图片对象(应该是一个路径)保存之后是一个空对象<br>思考中…<br>那我就保存图片的Base64格式, 下个页面取出转化成文件对象, 通过FormData 发送给后端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; update.vue</span><br><span class="line">beforeUpload(file) &#123;</span><br><span class="line">  file.preview &#x3D; await getBase64(file)</span><br><span class="line">  this.previewImage &#x3D; file.preview</span><br><span class="line">  localStorage.setItem(&#39;file&#39;, this.previewImage)</span><br><span class="line">  return false</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; list.vue</span><br><span class="line">created() &#123;</span><br><span class="line">  let file &#x3D; localStorage.getItem(&#39;file&#39;)</span><br><span class="line">  this.formData &#x3D; this.dataURLtoFile(file)</span><br><span class="line">  this.getList()</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">methods: &#123;</span><br><span class="line">  &#x2F;**</span><br><span class="line"> * @desc 将base64转换为文件对象</span><br><span class="line"> *&#x2F;</span><br><span class="line">  dataURLtoFile(dataurl) &#123;</span><br><span class="line">    &#x2F;&#x2F; data:image&#x2F;jpeg;base64,</span><br><span class="line">    const arr &#x3D; &#96;$&#123;dataurl&#125;&#96;.split(&#39;,&#39;)</span><br><span class="line">    console.log(arr)</span><br><span class="line">    const mime &#x3D; arr[0].match(&#x2F;:(.*?);&#x2F;)[1]</span><br><span class="line">    const bstr &#x3D; atob(arr[1])</span><br><span class="line">    let n &#x3D; bstr.length</span><br><span class="line">    const u8arr &#x3D; new Uint8Array(n)</span><br><span class="line">    while (n--) &#123;</span><br><span class="line">      u8arr[n] &#x3D; bstr.charCodeAt(n)</span><br><span class="line">    &#125;</span><br><span class="line">    let blob &#x3D; new File([u8arr], &#39;file&#39;, &#123;type: mime&#125;)</span><br><span class="line">    const params &#x3D; new FormData()</span><br><span class="line">    params.append(&#39;file&#39;, blob)</span><br><span class="line">    return params</span><br><span class="line">  &#125;,</span><br><span class="line">  getList() &#123;</span><br><span class="line">    let row &#x3D; new FormData()</span><br><span class="line">    row.append(&#39;file&#39;, this.formData.get(&#39;file&#39;))</span><br><span class="line">    axios</span><br><span class="line">      .post(&#39;&#x2F;api&#x2F;....&#39;, row)</span><br><span class="line">      .then(res &#x3D;&gt; &#123;</span><br><span class="line">        if (res.data.meta.status_code &#x3D;&#x3D;&#x3D; 200) &#123;</span><br><span class="line">          const data &#x3D; res.data.data || []</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          console.error(res.data.meta.message)</span><br><span class="line">          this.$message.error(res.data.meta.message)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">      .catch(error &#x3D;&gt; &#123;</span><br><span class="line">        console.error(error.message)</span><br><span class="line">      &#125;)</span><br><span class="line">      .finally(() &#x3D;&gt; &#123;</span><br><span class="line">        this.loading &#x3D; false</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完<br>参考链接<br><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file#attr-multiple">https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input/file#attr-multiple</a><br><a target="_blank" rel="noopener" href="https://juejin.im/post/6844904173750714381#comment">https://juejin.im/post/6844904173750714381#comment</a> | base64与文件对象相互转换深入浅出 - 掘金</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%9B%BE%E7%89%87%E9%A2%84%E8%A7%88/" rel="tag"># 图片预览</a>
+              <a href="/tags/base64/" rel="tag"># base64</a>
+              <a href="/tags/formData/" rel="tag"># formData</a>
+              <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%B5%81-binary/" rel="tag"># 二进制流(binary)</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/27/Vue-router-push-url%E4%B8%8D%E6%94%B9%E5%8F%98/" rel="prev" title="Vue router.push(), url不改变">
+      <i class="fa fa-chevron-left"></i> Vue router.push(), url不改变
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE-Vue-js-Ant-Design-of-Vue"><span class="nav-number">1.</span> <span class="nav-text">项目: Vue.js + Ant Design of Vue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E6%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text">需求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8A%E4%BB%A3%E7%A0%81"><span class="nav-number">2.0.1.</span> <span class="nav-text">上代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF-1"><span class="nav-number">2.0.2.</span> <span class="nav-text">思路</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="stonezhang"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">stonezhang</p>
+  <div class="site-description" itemprop="description">弱小和无知都不是生存的障碍，傲慢才是</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhang-stone" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhang-stone" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhangzhhe@gmail.com" title="E-Mail → mailto:zhangzhhe@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">stonezhang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
