@@ -20,6 +20,77 @@
   font-display: swap;
 }
 
+/* 为主题切换添加全局过渡动画 */
+html {
+  color: theme('textColor.primary');
+  background-color: theme('backgroundColor.root');
+  scroll-padding-top: 64px;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+/* 主题切换过程中的特殊处理 */
+html.theme-transitioning {
+  transition:
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.theme-transitioning * {
+  transition:
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    fill 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    stroke 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 为所有元素添加颜色和背景色过渡 */
+* {
+  scrollbar-width: thin;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    fill 0.3s ease,
+    stroke 0.3s ease;
+}
+
+/* 为需要快速响应的交互元素使用更快的过渡 */
+button,
+a,
+input,
+textarea,
+select {
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* 防止某些元素在主题切换时出现不必要的过渡 */
+img,
+video,
+iframe,
+canvas,
+svg {
+  transition:
+    opacity 0.3s ease,
+    filter 0.3s ease;
+}
+
+/* 确保代码块和预格式化文本的平滑过渡 */
+pre,
+code {
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
 ::selection {
   background-color: theme('colors.accent');
   color: white;
@@ -29,16 +100,6 @@
   background-color: theme('colors.accent/0.3');
 }
 
-html {
-  color: theme('textColor.primary');
-  background-color: theme('backgroundColor.root');
-  scroll-padding-top: 64px;
-}
-
 html.gray {
   filter: grayscale(1);
-}
-
-* {
-  scrollbar-width: thin;
 }

@@ -56,77 +56,8 @@ function AccessibleMenu() {
 }
 
 function HeaderMenu({ isBgShow }: { isBgShow: boolean }) {
-  const pathName = usePathName()
-  const [mouseX, setMouseX] = useState(0)
-  const [mouseY, setMouseY] = useState(0)
-  const [radius, setRadius] = useState(0)
-
-  const background = `radial-gradient(${radius}px circle at ${mouseX}px ${mouseY}px, rgb(var(--color-accent) / 0.12) 0%, transparent 65%)`
-
-  const handleMouseMove = ({ clientX, clientY, currentTarget }: React.MouseEvent) => {
-    const bounds = currentTarget.getBoundingClientRect()
-    setMouseX(clientX - bounds.left)
-    setMouseY(clientY - bounds.top)
-    setRadius(Math.sqrt(bounds.width ** 2 + bounds.height ** 2) / 2.5)
-  }
-
   return (
-    <nav
-      className={clsx('relative rounded-full group pointer-events-auto duration-200', {
-        'bg-gradient-to-b from-zinc-50/70 to-white/90 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur-md dark:from-zinc-900/70 dark:to-zinc-800/90 dark:ring-zinc-100/10':
-          isBgShow,
-      })}
-      onMouseMove={handleMouseMove}
-    >
-      <div
-        className="absolute -z-1 -inset-px rounded-full opacity-0 group-hover:opacity-100 duration-500"
-        style={{ background }}
-        aria-hidden
-      ></div>
-      <div className="text-sm px-4 flex">
-        {menus.map((menu) => (
-          <HeaderMenuItem
-            key={menu.name}
-            href={menu.link}
-            title={menu.name}
-            icon={menu.icon}
-            isActive={pathName === menu.link}
-          />
-        ))}
-      </div>
-    </nav>
-  )
-}
-
-function HeaderMenuItem({
-  href,
-  isActive,
-  title,
-  icon,
-}: {
-  href: string
-  isActive: boolean
-  title: string
-  icon: string
-}) {
-  return (
-    <a
-      className={clsx('relative block px-4 py-1.5', isActive ? 'text-accent' : 'hover:text-accent')}
-      href={href}
-    >
-      <div className="flex space-x-2">
-        {isActive && (
-          <motion.i
-            className={clsx('iconfont', icon)}
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-          ></motion.i>
-        )}
-        <span>{title}</span>
-      </div>
-      {isActive && (
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent"></div>
-      )}
-    </a>
+    <div className="flex items-center space-x-4">
+    </div>
   )
 }

@@ -1,48 +1,35 @@
 import { themeAtom } from '@/store/theme'
 import { useAtom } from 'jotai'
+import { useSound } from 'use-sound'
+import switchOnSound from '@/assets/sound/switch-on.mp3'
+import switchOffSound from '@/assets/sound/switch-off.mp3'
 
 export function ThemeSwitch() {
   const [theme, setTheme] = useAtom(themeAtom)
+  const [playThemeSwitchSound] = useSound(theme === 'light' ? switchOnSound : switchOffSound)
 
-  const left = { light: 4, system: 36, dark: 68 }[theme]
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    playThemeSwitchSound({ volume: 0.1 });
+    setTheme(newTheme)
+  }
 
   return (
-    <div className="relative inline-block">
-      <div
-        className="absolute -z-1 top-1 size-[32px] rounded-full bg-primary transition-transform shadow"
-        style={{
-          transform: `translateX(${left}px)`,
-        }}
-      ></div>
-      <div
-        className="p-[3px] flex rounded-full border border-primary"
-        role="radiogroup"
+    <div className="relative">
+      <button
+        className="border border-primary p-2 rounded-full text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all duration-200"
+        type="button"
+        aria-label={theme === 'light' ? '切换到深色主题' : '切换到浅色主题'}
+        onClick={toggleTheme}
       >
-        <button
-          className="size-[32px] flex items-center justify-center"
-          type="button"
-          aria-label="Switch to light theme"
-          onClick={() => setTheme('light')}
-        >
-          <i className="iconfont icon-sun"></i>
-        </button>
-        <button
-          className="size-[32px] flex items-center justify-center"
-          type="button"
-          aria-label="Switch to system theme"
-          onClick={() => setTheme('system')}
-        >
-          <i className="iconfont icon-computer"></i>
-        </button>
-        <button
-          className="size-[32px] flex items-center justify-center"
-          type="button"
-          aria-label="Switch to dark theme"
-          onClick={() => setTheme('dark')}
-        >
-          <i className="iconfont icon-moon"></i>
-        </button>
-      </div>
+        <div className="flex items-center justify-center w-5 h-5">
+          <i 
+            className={`iconfont text-lg transition-all duration-300 ${
+              theme === 'light' ? 'icon-moon' : 'icon-sun'
+            }`}
+          ></i>
+        </div>
+      </button>
     </div>
   )
 }

@@ -74,7 +74,7 @@ export function HeaderDrawer({ zIndex = 999 }: { zIndex?: number }) {
                     },
                   }}
                 >
-                  <DrawerContentImpl />
+                  {/* <DrawerContentImpl /> */}
                 </DrawerContext.Provider>
               </motion.div>
             </Dialog.Content>
@@ -103,16 +103,9 @@ function DrawerContentImpl() {
   const { dismiss } = useContext(DrawerContext)
 
   return (
-    <ul className="mt-8 pb-8 overflow-y-auto overflow-x-hidden min-h-0">
-      {menus.map((menu) => (
-        <motion.li key={menu.name} variants={menuItemVariants}>
-          <a className="inline-flex p-2 space-x-4" href={menu.link} onClick={dismiss}>
-            <i className={clsx('iconfont', menu.icon)}></i>
-            <span>{menu.name}</span>
-          </a>
-        </motion.li>
-      ))}
-    </ul>
+    <div>
+      <ThemeSwitch />
+    </div>
   )
 }
 
