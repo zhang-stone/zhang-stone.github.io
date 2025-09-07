@@ -6,11 +6,13 @@ import switchOffSound from '@/assets/sound/switch-off.mp3'
 
 export function ThemeSwitch() {
   const [theme, setTheme] = useAtom(themeAtom)
-  const [playThemeSwitchSound] = useSound(theme === 'light' ? switchOnSound : switchOffSound)
+  const [playThemeSwitchSound] = useSound(theme === 'light' ? switchOnSound : switchOffSound, {
+    volume: 0.25
+  })
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light'
-    playThemeSwitchSound({ volume: 0.1 });
+    playThemeSwitchSound();
     setTheme(newTheme)
   }
 
