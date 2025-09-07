@@ -104,7 +104,6 @@ function DrawerContentImpl() {
 
   return (
     <div>
-      <ThemeSwitch />
     </div>
   )
 }
