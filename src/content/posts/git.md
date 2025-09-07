@@ -12,7 +12,7 @@ tags: [git]
 
 ### 1. 生成 GitHub 专用 SSH 密钥
 
-```
+```bash
 ssh-keygen -t rsa -b 4096 -C "zhangsan@gmail.com" -f ~/.ssh/id_rsa_github
 ```
 
@@ -22,7 +22,7 @@ ssh-keygen -t rsa -b 4096 -C "zhangsan@gmail.com" -f ~/.ssh/id_rsa_github
 
 编辑或创建 `~/.ssh/config` 文件，添加以下内容：
 
-```
+```bash
 Host github.com
   Hostname github.com
   AddKeysToAgent yes
@@ -37,7 +37,7 @@ Host github.com
 
 在主配置文件 `~/.gitconfig` 中添加：
 
-```
+```bash
 [includeIf "gitdir:~/dev/"]
     path = ~/dev/.gitconfig
 ```
@@ -48,7 +48,7 @@ Host github.com
 
 创建或编辑 `~/dev/.gitconfig`，添加个人身份信息：
 
-```
+```bash
 [user]
     name = sanzhang
     email = zhangsan@gmail.com
