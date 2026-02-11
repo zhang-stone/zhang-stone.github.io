@@ -71,9 +71,9 @@
     "wechat": "https://s21.ax1x.com/2025/09/07/pV2chXn.jpg"
   },
   "analytics": {
-    "enable": false,
+    "enable": true,
     "google": {
-      "measurementId": ""
+      "measurementId": "G-EMYJDTBDZG"
     },
     "umami": {
       "serverUrl": "",
