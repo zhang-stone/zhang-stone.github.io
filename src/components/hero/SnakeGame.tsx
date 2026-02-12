@@ -21,6 +21,32 @@ const INITIAL_SNAKE: Position[] = [
   { x: 3, y: 5 },
 ]
 
+// 斐波那契数列生成器
+function generateFibonacci(n: number): Set<number> {
+  const fib = [1, 1]
+  for (let i = 2; i < n; i++) {
+    fib.push(fib[i - 1] + fib[i - 2])
+  }
+  return new Set(fib)
+}
+
+// 预设颜色方案（蛇身、蛇头、食物）
+const COLOR_SCHEMES = [
+  { snake: '#059669', snakeHead: '#047857', food: '#f43f5e' },   // 绿蛇粉食
+  { snake: '#3b82f6', snakeHead: '#2563eb', food: '#fbbf24' },   // 蓝蛇黄食
+  { snake: '#8b5cf6', snakeHead: '#7c3aed', food: '#f97316' },   // 紫蛇橙食
+  { snake: '#ec4899', snakeHead: '#db2777', food: '#10b981' },   // 粉蛇绿食
+  { snake: '#f59e0b', snakeHead: '#d97706', food: '#6366f1' },   // 橙蛇靛食
+  { snake: '#14b8a6', snakeHead: '#0d9488', food: '#ef4444' },   // 青蛇红食
+  { snake: '#06b6d4', snakeHead: '#0891b2', food: '#a855f7' },   // 天蓝蛇紫食
+  { snake: '#f43f5e', snakeHead: '#e11d48', food: '#22d3ee' },   // 玫红蛇青食
+  { snake: '#84cc16', snakeHead: '#65a30d', food: '#f472b6' },   // 黄绿蛇粉食
+  { snake: '#6366f1', snakeHead: '#4f46e5', food: '#fb923c' },   // 靛蛇橙食
+]
+
+// 生成前 20 项斐波那契数（1, 1, 2, 3, 5, 8, 13, 21... 最大 6765）
+const FIBONACCI_SET = generateFibonacci(10)
+
 export function SnakeGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [snake, setSnake] = useState<Position[]>(INITIAL_SNAKE)
@@ -32,6 +58,7 @@ export function SnakeGame() {
   const [isPaused, setIsPaused] = useState(false)
   const [gameStarted, setGameStarted] = useState(false)
   const [highScore, setHighScore] = useState(0)
+  const [colorSchemeIndex, setColorSchemeIndex] = useState(0)
   const theme = useAtomValue(themeAtom)
 
   // 主题颜色配置
@@ -182,7 +209,21 @@ export function SnakeGame() {
           // 检查是否吃到食物
           const newSnake = [newHead, ...prevSnake]
           if (newHead.x === food.x && newHead.y === food.y) {
-            setScore((prev) => prev + 1)
+            setScore((prev) => {
+              const newScore = prev + 1
+
+              // 检查是否达到斐波那契数
+              if (FIBONACCI_SET.has(newScore)) {
+                // 随机选择新颜色（确保与当前不同）
+                let newIndex
+                do {
+                  newIndex = Math.floor(Math.random() * COLOR_SCHEMES.length)
+                } while (newIndex === colorSchemeIndex)
+                setColorSchemeIndex(newIndex)
+              }
+
+              return newScore
+            })
             setFood(generateFood(newSnake))
           } else {
             newSnake.pop()
@@ -210,6 +251,9 @@ export function SnakeGame() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    // 获取当前颜色方案
+    const currentScheme = COLOR_SCHEMES[colorSchemeIndex]
+
     // 清空画布
     ctx.fillStyle = currentColors.background
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
@@ -232,7 +276,7 @@ export function SnakeGame() {
 
     // 绘制蛇
     snake.forEach((segment, index) => {
-      ctx.fillStyle = index === 0 ? currentColors.snakeHead : currentColors.snake
+      ctx.fillStyle = index === 0 ? currentScheme.snakeHead : currentScheme.snake
       ctx.fillRect(
         segment.x * GRID_SIZE + 1,
         segment.y * GRID_SIZE + 1,
@@ -257,7 +301,7 @@ export function SnakeGame() {
     })
 
     // 绘制食物（圆形）
-    ctx.fillStyle = currentColors.food
+    ctx.fillStyle = currentScheme.food
     ctx.beginPath()
     ctx.arc(
       food.x * GRID_SIZE + GRID_SIZE / 2,
@@ -267,7 +311,7 @@ export function SnakeGame() {
       2 * Math.PI
     )
     ctx.fill()
-  }, [snake, food, theme, currentColors, direction])
+  }, [snake, food, theme, currentColors, direction, colorSchemeIndex])
 
   // 开始游戏
   const startGame = () => {
@@ -285,12 +329,15 @@ export function SnakeGame() {
     setGameOver(false)
     setIsPaused(false)
     setGameStarted(true)
+    setColorSchemeIndex(0)  // 重置为默认颜色
   }
 
   return (
     <div className="select-none">
       <div className="mb-4 flex items-center justify-between">
-        <span></span>
+        <span className="text-[40px]">
+
+        </span>
         <div className="flex gap-4 text-sm">
           <span className="text-secondary">
             得分: <span className="font-bold text-primary">{score}</span>
