@@ -2,7 +2,7 @@
 import { hero, author } from '@/config.json'
 import { SocialList } from './SocialList'
 import Highlight from '@/components/Highlight.astro'
-import { ContributionHeatmap } from './ContributionHeatmap'
+import { SnakeGame } from './SnakeGame'
 ---
 
 <div class="lg:-mt-16 lg:h-dvh lg:min-h-[720px]">
@@ -17,7 +17,7 @@ import { ContributionHeatmap } from './ContributionHeatmap'
       <SocialList className="mt-[60px]" client:load />
     </div>
     <div class="mt-20 lg:mt-0">
-      <ContributionHeatmap client:load />
+      <SnakeGame client:load />
     </div>
 
     <div class="mt-10 lg:mt-0 lg:absolute inset-x-0 bottom-0 flex flex-col items-center">
