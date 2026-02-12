@@ -2,6 +2,7 @@
 import { hero, author } from '@/config.json'
 import { SocialList } from './SocialList'
 import Highlight from '@/components/Highlight.astro'
+import { ContributionHeatmap } from './ContributionHeatmap'
 ---
 
 <div class="lg:-mt-16 lg:h-dvh lg:min-h-[720px]">
@@ -16,11 +17,7 @@ import Highlight from '@/components/Highlight.astro'
       <SocialList className="mt-[60px]" client:load />
     </div>
     <div class="mt-20 lg:mt-0">
-      <div
-        class="size-[200px] lg:size-[300px] rounded-full overflow-hidden border border-primary bg-zinc-100 dark:bg-zinc-800"
-      >
-        <img class="size-full" src={author.avatar} alt="Site owner avatar" loading="lazy" />
-      </div>
+      <ContributionHeatmap client:load />
     </div>
 
     <div class="mt-10 lg:mt-0 lg:absolute inset-x-0 bottom-0 flex flex-col items-center">
