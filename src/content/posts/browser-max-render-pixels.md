@@ -1,9 +1,8 @@
 ---
 title: 浏览器最多能渲染多少像素？
-date: 2025-01-01
+pubDatetime: 2025-01-01
 description: 探索浏览器渲染的像素高度限制
-tags: [浏览器, 前端, 性能, 渲染]
-category: 前端技术
+tags: [浏览器, 前端, 性能, 渲染, 前端技术]
 draft: false
 ---
 

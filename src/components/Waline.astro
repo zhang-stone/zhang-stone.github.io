@@ -1,0 +1,39 @@
+---
+const serverURL = "https://waline-dusky-three.vercel.app";
+---
+
+<div id="waline" class="mt-8" data-server-url={serverURL}></div>
+
+<script>
+  import { init } from "@waline/client";
+  import "@waline/client/style";
+
+  type WalineInstance = ReturnType<typeof init>;
+
+  let instance: WalineInstance | undefined;
+
+  function mountWaline() {
+    const el = document.querySelector<HTMLElement>("#waline");
+    if (!el) {
+      instance?.destroy();
+      instance = undefined;
+      return;
+    }
+
+    instance?.destroy();
+    instance = init({
+      el,
+      serverURL: el.dataset.serverUrl ?? "https://waline-dusky-three.vercel.app",
+      dark: "html[data-theme='dark']",
+      login: "force",
+      imageUploader: false,
+      search: false,
+      locale: {
+        placeholder: "发条友善的评论吧（支持 Markdown 语法）…",
+      },
+      emoji: ["//unpkg.com/@waline/emojis@1.1.0/bilibili"],
+    });
+  }
+
+  document.addEventListener("astro:page-load", mountWaline);
+</script>

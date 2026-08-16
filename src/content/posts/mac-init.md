@@ -1,8 +1,7 @@
 ---
 title: M3 芯片 Mac 新机前端环境配置
-date: 2024-12-23
-category: 前端
-summary: 新购 Apple M3 芯片 Mac 的前端开发环境配置记录，包括 Homebrew、Node.js、nvm 及 Oh My Zsh 安装与常见问题解决方案
+pubDatetime: 2024-12-23
+description: 新购 Apple M3 芯片 Mac 的前端开发环境配置记录，包括 Homebrew、Node.js、nvm 及 Oh My Zsh 安装与常见问题解决方案
 tags: [Mac, 前端, 开发环境, Node.js, Homebrew]
 ---
 

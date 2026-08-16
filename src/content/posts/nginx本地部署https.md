@@ -1,12 +1,11 @@
 ---
 title: nginx本地部署https
-date: 2020-08-06 23:06:55
+pubDatetime: 2020-08-06T23:06:55
+description: 在 Windows 本地用 OpenSSL 自签证书，为 Nginx 配置 HTTPS。
 tags:
   - nginx
   - https
   - 前端
-categories:
-  - nginx
 ---
 
 ## 1 安装OpenSSL

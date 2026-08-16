@@ -1,6 +1,7 @@
 ---
 title: Git 多身份配置实践：公司与个人项目的高效切换方案
-date: 2025-01-26
+pubDatetime: 2025-01-26
+description: 通过路径隔离为公司 GitLab 与个人 GitHub 配置独立身份、SSH 密钥和邮箱。
 tags: [git]
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: 不重装也能进系统：通过安装盘替换 Utilman 快速重置密码
-date: 2025-09-21T13:50:47.027Z
-tags: ['Windows', '系统维护', '密码重置']
-comments: true
+pubDatetime: 2025-09-21T13:50:47.027Z
+description: 通过 Windows 安装盘替换 Utilman.exe，在登录界面调出命令行并重置本地账户密码。
+tags: ["Windows", "系统维护", "密码重置"]
 draft: false
 ---
 

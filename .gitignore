@@ -23,4 +23,14 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
+# local editor / agent files
 .cursor/
+
+# pagefind
+public/pagefind
+
+# pnpm
+.pnpm-store
+
+# docker compose
+compose.override.yaml

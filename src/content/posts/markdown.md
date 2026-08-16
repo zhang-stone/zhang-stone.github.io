@@ -1,9 +1,8 @@
 ---
 title: Markdown 示例
-date: 2020-04-01
-summary: 这是一篇 Markdown 文章的示例。展示了 Markdown 的语法和渲染效果。
-category: 例子
-tags: [Markdown]
+pubDatetime: 2020-04-01
+description: 这是一篇 Markdown 文章的示例。展示了 Markdown 的语法和渲染效果。
+tags: [Markdown, 例子]
 ---
 
 下面是在 Astro 中编写 Markdown 内容时，可以使用的一些基本 Markdown 语法示例。

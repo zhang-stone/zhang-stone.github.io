@@ -1,11 +1,9 @@
 ---
 title: Apple Silicon Mac 上运行 x86_64 iOS 模拟器应用
-date: 2026-08-15
-lastMod: 2026-08-15
-summary: 记录 x86_64 模拟器应用在 Apple Silicon Mac 上安装失败的原因、诊断方法，以及使用 Universal Simulator Runtime 和 Rosetta 目标模拟器解决问题的完整过程
-category: iOS 开发
-tags: [iOS, Xcode, Simulator, Apple Silicon, Rosetta]
-comments: true
+pubDatetime: 2026-08-15
+modDatetime: 2026-08-15
+description: 记录 x86_64 模拟器应用在 Apple Silicon Mac 上安装失败的原因、诊断方法，以及使用 Universal Simulator Runtime 和 Rosetta 目标模拟器解决问题的完整过程
+tags: [iOS, Xcode, Simulator, Apple Silicon, Rosetta, iOS 开发]
 draft: false
 ---
 

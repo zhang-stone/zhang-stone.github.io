@@ -1,9 +1,8 @@
 ---
 title: React Context 更新时，子组件一定会重新渲染吗？
-date: 2025-09-22
+pubDatetime: 2025-09-22
 description: 从默认渲染链到订阅机制，再到引用一致性，系统拆解 React Context 更新时的渲染行为与优化策略
-tags: [React, Context, 性能优化, 前端]
-category: 前端技术
+tags: [React, Context, 性能优化, 前端, 前端技术]
 draft: false
 ---
 

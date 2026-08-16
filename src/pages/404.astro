@@ -1,18 +1,35 @@
 ---
-import Layout from '@/layouts/Layout.astro'
-import { Flashlight } from '@/components/Flashlight'
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
 ---
 
-<Layout title="404">
-  <div class="max-w-[800px] mx-auto py-16 px-4 md:px-8">
-    <h1 class="text-[4rem] md:text-[9rem] leading-tight font-bold">Not Found</h1>
-    <p class="text-3xl mb-24 text-gray-800/90 dark:text-gray-200/90">
-      对不起，这个链接坏了。可能有些东西被删除，或者被移动了。无论如何，这里没什么可看的。
-    </p>
-    <a class="text-accent text-xl md:text-2xl inline-flex" href="/"
-      ><i class="iconfont icon-arrow-left-up"></i>
-      <span class="ml-2">传送回首页</span></a
-    >
-  </div>
-  <Flashlight client:only="react" />
+<Layout title={`${t.notFound.title} | ${config.site.title}`}>
+  <Header />
+
+  <main
+    id="main-content"
+    class="app-layout my-1 flex flex-1 items-center justify-center"
+  >
+    <div class="mb-14 flex flex-col items-center justify-center">
+      <h1 class="text-accent text-9xl font-bold">404</h1>
+      <span aria-hidden="true"> ¯\_(ツ)_/¯ </span>
+      <p class="mt-4 text-2xl sm:text-3xl">{t.notFound.message}</p>
+      <LinkButton
+        href={getRelativeLocaleUrl(locale, "")}
+        class="my-6 text-lg underline decoration-dashed underline-offset-8"
+      >
+        {t.notFound.goHome}
+      </LinkButton>
+    </div>
+  </main>
+
+  <Footer />
 </Layout>

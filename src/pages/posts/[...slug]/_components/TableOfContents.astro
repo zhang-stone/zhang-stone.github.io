@@ -1,0 +1,144 @@
+---
+import type { MarkdownHeading } from "astro";
+import { useTranslations } from "@/i18n";
+
+type Props = {
+  headings: MarkdownHeading[];
+};
+
+const { headings } = Astro.props;
+const tocHeadings = headings.filter(({ depth }) => depth >= 2 && depth <= 4);
+const t = useTranslations(Astro.currentLocale);
+---
+
+{
+  tocHeadings.length > 0 && (
+    <aside
+      data-pagefind-ignore
+      class="absolute inset-y-0 left-full ms-8 hidden w-56 xl:block"
+    >
+      <nav
+        aria-labelledby="table-of-contents-title"
+        class="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto"
+      >
+        <h2
+          id="table-of-contents-title"
+          class="text-foreground text-sm font-semibold"
+        >
+          {t.post.tableOfContents}
+        </h2>
+        <ol class="border-border mt-3 space-y-2 border-s ps-4 text-sm">
+          {tocHeadings.map(({ depth, slug, text }) => (
+            <li class:list={{ "ps-3": depth === 3, "ps-6": depth === 4 }}>
+              <a
+                href={`#${slug}`}
+                data-toc-link
+                data-heading-id={slug}
+                class="text-muted-foreground hover:text-accent focus-visible:text-accent block leading-snug transition-colors"
+              >
+                {text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </aside>
+  )
+}
+
+<style>
+  [data-toc-link][aria-current="location"] {
+    color: var(--accent);
+    font-weight: 600;
+  }
+</style>
+
+<script is:inline data-astro-rerun>
+  function initTableOfContents() {
+    window.__tocCleanup?.();
+
+    const links = Array.from(document.querySelectorAll("[data-toc-link]"));
+    const entries = links
+      .map(link => ({
+        link,
+        heading: document.getElementById(link.dataset.headingId ?? ""),
+      }))
+      .filter(entry => entry.heading);
+
+    if (entries.length === 0) {
+      window.__tocCleanup = null;
+      return;
+    }
+
+    let activeId = null;
+    let ticking = false;
+
+    function setActive(id) {
+      if (id === activeId) return;
+      activeId = id;
+
+      for (const { link, heading } of entries) {
+        if (heading.id === id) {
+          link.setAttribute("aria-current", "location");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      }
+    }
+
+    function updateActiveHeading() {
+      const activationOffset = 96;
+      let current = entries[0];
+
+      for (const entry of entries) {
+        if (entry.heading.getBoundingClientRect().top > activationOffset) break;
+        current = entry;
+      }
+
+      setActive(current.heading.id);
+      ticking = false;
+    }
+
+    function scheduleUpdate() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(updateActiveHeading);
+    }
+
+    function alignHashTarget() {
+      if (!window.location.hash) return;
+
+      let targetId;
+      try {
+        targetId = decodeURIComponent(window.location.hash.slice(1));
+      } catch {
+        targetId = window.location.hash.slice(1);
+      }
+
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      window.requestAnimationFrame(() => {
+        target.scrollIntoView({ block: "start" });
+        scheduleUpdate();
+      });
+    }
+
+    document.addEventListener("scroll", scheduleUpdate, { passive: true });
+    document.addEventListener("astro:page-load", alignHashTarget, {
+      once: true,
+    });
+    window.addEventListener("hashchange", scheduleUpdate);
+    window.addEventListener("load", alignHashTarget, { once: true });
+    scheduleUpdate();
+
+    window.__tocCleanup = () => {
+      document.removeEventListener("scroll", scheduleUpdate);
+      document.removeEventListener("astro:page-load", alignHashTarget);
+      window.removeEventListener("hashchange", scheduleUpdate);
+      window.removeEventListener("load", alignHashTarget);
+    };
+  }
+
+  initTableOfContents();
+</script>
